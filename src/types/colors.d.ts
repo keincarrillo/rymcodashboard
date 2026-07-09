@@ -1,0 +1,1 @@
+export type Colors = "black" | "stop" | "purple" | "orange" | "red" | "green"
