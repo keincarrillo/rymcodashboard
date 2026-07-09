@@ -1,28 +1,61 @@
 import { createContext, useState, useEffect, useCallback, useRef, type ReactNode } from "react"
 import type { MaquinaData, SocketContextType } from "../types"
-
-const MAQUINAS_IDS = ["mxm001", "mxm002", "mxm003", "mxsl1", "mxrs1"]
+import { MAQUINAS_IDS, MAQUINAS } from "../config/maquinas"
+import { generateMockMaquina } from "../mocks/mockData"
 
 export const SocketContext = createContext<SocketContextType>({
   maquinasData: [],
   getMaquina: () => undefined,
   isConnected: false,
+  isMockMode: false,
 })
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [maquinasData, setMaquinasData] = useState<MaquinaData[]>([])
   const [isConnected, setIsConnected] = useState(false)
+  const [isMockMode, setIsMockMode] = useState(false)
   const wsRef = useRef<WebSocket | null>(null)
   const reconnectTimeoutRef = useRef<number | null>(null)
+  const mockIntervalRef = useRef<number | null>(null)
   const reconnectAttempts = useRef(0)
-  const maxReconnectAttempts = 10
+  const maxReconnectAttempts = 5
 
   const getMaquina = useCallback(
     (id: string) => maquinasData.find((m) => m.id === id),
     [maquinasData]
   )
 
+  const startMockMode = useCallback(() => {
+    console.log("[Socket] Modo mock activado — datos simulados")
+    setIsMockMode(true)
+    setIsConnected(false)
+
+    const updateMocks = () => {
+      setMaquinasData(
+        MAQUINAS.map((m) => generateMockMaquina(m.id, m.nombre))
+      )
+    }
+
+    updateMocks()
+    mockIntervalRef.current = window.setInterval(updateMocks, 3000)
+  }, [])
+
+  const stopMockMode = useCallback(() => {
+    if (mockIntervalRef.current) {
+      clearInterval(mockIntervalRef.current)
+      mockIntervalRef.current = null
+    }
+    setIsMockMode(false)
+  }, [])
+
   const connect = useCallback(() => {
+    const useMocks = import.meta.env.VITE_USE_MOCKS === "true"
+
+    if (useMocks) {
+      startMockMode()
+      return
+    }
+
     const url = import.meta.env.VITE_SOCKET_URL || "ws://localhost:8080"
 
     try {
@@ -33,6 +66,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         console.log("[Socket] Conectado a", url)
         setIsConnected(true)
         reconnectAttempts.current = 0
+        stopMockMode()
       }
 
       ws.onmessage = (event) => {
@@ -76,11 +110,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       console.error("[Socket] Error creando conexión:", err)
       scheduleReconnect()
     }
-  }, [])
+  }, [startMockMode, stopMockMode])
 
   const scheduleReconnect = useCallback(() => {
     if (reconnectAttempts.current >= maxReconnectAttempts) {
-      console.log("[Socket] Máximo de reconexiones alcanzado")
+      console.log("[Socket] Máximo de reconexiones alcanzado — activando modo mock")
+      startMockMode()
       return
     }
 
@@ -91,7 +126,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       reconnectAttempts.current++
       connect()
     }, delay)
-  }, [connect])
+  }, [connect, startMockMode])
 
   useEffect(() => {
     connect()
@@ -103,11 +138,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       if (wsRef.current) {
         wsRef.current.close()
       }
+      stopMockMode()
     }
-  }, [connect])
+  }, [connect, stopMockMode])
 
   return (
-    <SocketContext.Provider value={{ maquinasData, getMaquina, isConnected }}>
+    <SocketContext.Provider value={{ maquinasData, getMaquina, isConnected, isMockMode }}>
       {children}
     </SocketContext.Provider>
   )

@@ -1,12 +1,5 @@
 import { Link } from "react-router-dom"
-
-const MAQUINAS = [
-  { id: "mxm001", nombre: "Molino 1" },
-  { id: "mxm002", nombre: "Molino 2" },
-  { id: "mxm003", nombre: "Molino 3" },
-  { id: "mxsl1", nombre: "Slitter" },
-  { id: "mxrs1", nombre: "Roscadora" },
-]
+import { MAQUINAS } from "../config/maquinas"
 
 export function Home() {
   return (
