@@ -1,32 +1,91 @@
-# React + TypeScript + Vite
+# RYMCO Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Dashboard industrial en tiempo real para monitoreo de máquinas de manufactura de tubos Tibo Conduit. Recibe datos vía WebSocket desde Node-RED y muestra métricas en vivo con diales circulares, información de órdenes de producción, gráficas históricas y sistema de alarmas.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19 + Vite 7 + TypeScript + Tailwind CSS v4
+- React Router v7 (HashRouter)
+- Lucide React (iconos)
+- Recharts (gráficas de línea y barras)
+- Diales SVG custom (sin librería de gauge)
 
-## React Compiler
+## Inicio rápido
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Instalar dependencias
+bun install
 
-## Expanding the Oxlint configuration
+# Variables de entorno
+cp .env.example .env
+# Editar VITE_SOCKET_URL (default: ws://localhost:8080)
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+# Desarrollo
+bun dev
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+# Build producción
+bun run build
+
+# Lint
+bun run lint
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Estructura
+
+```
+src/
+├── types/          # Interfaces puras (MaquinaData, Variables, Alarma)
+├── config/         # Definición de máquinas (agregar nuevas aquí)
+├── context/        # 4 providers: Socket, Alarma, Clock, Tema
+├── hooks/          # 1:1 hooks por contexto
+├── layout/         # Layout + Header + Sidebar + MainContent
+├── pages/          # Home (/) + MaquinaPage (/maquina/:id)
+├── components/
+│   ├── ui/         # Atómicos reutilizables
+│   ├── dials/      # DialGauge (SVG) + DialCard
+│   ├── informativo/# Estado + ODT + Tonelaje
+│   ├── graficas/   # LineChart + BarChart + ChartPanel
+│   └── alarmas/    # AlarmPanel + AlarmList + AlarmItem
+├── utils/          # Funciones puras (getColor, formatValue, etc.)
+├── styles/         # Constantes de estilo y tema
+└── mocks/          # Datos mock para desarrollo offline
+```
+
+## Flujo de datos
+
+```
+Node-RED → WebSocket → SocketContext → AlarmaContext
+                              ↓              ↓
+                        MaquinaData[]    Alarmas[]
+                              ↓
+              ┌───────────────┼───────────────┐
+              ↓               ↓               ↓
+         MaquinaPage     DialCard       AlarmPanel
+```
+
+## Máquinas configuradas
+
+| ID | Nombre | Variables |
+|---|---|---|
+| mxm001 | Molino 1 | 13 |
+| mxm002 | Molino 2 | 8 |
+| mxm003 | Molino 3 | 7 |
+| mxsl1 | Slitter | — |
+| mxrs1 | Roscadora | — |
+
+Para agregar máquinas, editar `src/config/maquinas.tsx`.
+
+## Tema
+
+- Oscuro por defecto (bg `#0f172a`, paneles `#1e293b`)
+- Toggle claro/oscuro en el Header
+- Persistencia en `localStorage`
+
+## Despliegue
+
+Build servido en `/linkfactory/dashboardMX/dist/` (configurado en `vite.config.ts`).
+
+## Enlaces
+
+- Grafana: `http://monitormx.rymco.io:9030/public-dashboards/<uuid>`
+- WebSocket: configurable via `VITE_SOCKET_URL` en `.env`
