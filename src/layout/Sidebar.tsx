@@ -54,7 +54,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
         <div className="flex-1 overflow-y-auto">
           <div className="p-2">
-            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[var(--text-muted)] hidden lg:block mb-2 px-2">
+            <span className="text-[9px] font-mono uppercase tracking-[0.18em] text-[var(--text-muted)] hidden lg:block mb-2 px-2 font-medium">
               Estaciones
             </span>
             <nav className="space-y-0.5">
@@ -71,8 +71,8 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                     className={`
                       flex items-center gap-2 px-2 py-1.5 radius-button transition-all duration-100
                       ${isActive
-                        ? "bg-[var(--accent-dim)] text-[var(--accent)]"
-                        : "text-[var(--text-color)] hover:bg-[var(--hover-bg)]"
+                        ? "bg-[var(--accent-dim)] text-[var(--accent)] font-medium"
+                        : "text-[var(--text-muted)] hover:text-[var(--text-color)] hover:bg-[var(--hover-bg)]"
                       }
                     `}
                   >

@@ -6,9 +6,9 @@ export function Home() {
   const { getMaquina, isConnected } = useSocket()
 
   return (
-    <div className="p-4 h-full overflow-y-auto">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold">Overview</h2>
+    <div className="p-5 h-full overflow-y-auto space-y-5">
+      <div className="flex items-center justify-between">
+        <h1 className="text-base font-semibold tracking-tight">Overview</h1>
         <span className="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
           {isConnected ? "Conectado" : "Sin conexion"}
         </span>
@@ -19,9 +19,9 @@ export function Home() {
           const maquina = getMaquina(m.id)
           if (!maquina) {
             return (
-              <div key={m.id} className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-3">
-                <h2 className="text-sm font-bold mb-2">{m.nombre}</h2>
-                <div className="p-2 bg-[var(--input-bg)] radius-card border border-[var(--elevated-color)]">
+              <div key={m.id} className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-3 flex flex-col gap-2">
+                <h2 className="text-sm font-bold">{m.nombre}</h2>
+                <div className="flex-1 flex items-center justify-center p-3 bg-[var(--input-bg)] radius-card border border-[var(--elevated-color)]">
                   <p className="text-[9px] font-mono text-[var(--text-muted)] text-center uppercase tracking-widest">Sin datos</p>
                 </div>
               </div>

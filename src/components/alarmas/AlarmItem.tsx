@@ -46,8 +46,8 @@ export function AlarmItem({ alarma, onDismiss }: AlarmItemProps) {
       />
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-0.5">
-          <span className={`text-[8px] font-mono px-1 py-0 font-bold ${style.badge}`}>
+        <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+          <span className={`text-[8px] font-mono px-1 py-0.5 radius-badge font-bold ${style.badge}`}>
             {style.label}
           </span>
           <span className="text-[8px] font-mono text-[var(--text-muted)] flex items-center gap-0.5">
@@ -64,7 +64,7 @@ export function AlarmItem({ alarma, onDismiss }: AlarmItemProps) {
 
       <button
         onClick={() => onDismiss(alarma.id)}
-        className="shrink-0 p-0.5 radius-button hover:bg-[var(--hover-bg)] transition-colors opacity-0 group-hover:opacity-50 hover:!opacity-100 text-[var(--text-muted)]"
+        className="shrink-0 p-0.5 radius-button hover:bg-[var(--hover-bg)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-color)]"
         title="Descartar"
       >
         <XCircle size={10} />

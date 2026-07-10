@@ -6,6 +6,7 @@ export function Skeleton({ className = "" }: SkeletonProps) {
   return (
     <div
       className={`animate-pulse bg-[var(--hover-bg)] radius-card ${className}`}
+      style={{ animationDuration: "1.5s" }}
     />
   )
 }
