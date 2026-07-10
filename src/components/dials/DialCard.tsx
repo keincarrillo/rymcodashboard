@@ -20,7 +20,7 @@ export function DialCard({ variableKey, variable, estado }: DialCardProps) {
         {variable.nombre || variableKey}
       </span>
       <DialGauge valor={valor} min={min} max={max} nom={nom} estado={estado} size={90} />
-      <span className="data-value text-base">{displayVal}</span>
+      <span className="data-value text-lg">{displayVal}</span>
     </div>
   )
 }

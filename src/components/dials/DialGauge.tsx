@@ -11,9 +11,13 @@ interface DialGaugeProps {
   size?: number
 }
 
-const START_ANGLE = -225
-const END_ANGLE = 45
-const ARC_SWEEP = END_ANGLE - START_ANGLE
+const SVG_START_ANGLE = -225
+const SVG_END_ANGLE = 45
+const ARC_SWEEP = SVG_END_ANGLE - SVG_START_ANGLE
+
+const CSS_START_ANGLE = SVG_START_ANGLE + 90
+const CSS_END_ANGLE = SVG_END_ANGLE + 90
+const CSS_SWEEP = CSS_END_ANGLE - CSS_START_ANGLE
 
 export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps) {
   const colorKey = getColor(valor, min, max, estado)
@@ -34,13 +38,13 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
   }, [valor, min, max])
 
   const dashOffset = arcCircumference * (1 - ratio)
-  const needleAngle = START_ANGLE + ratio * ARC_SWEEP
+  const needleAngle = CSS_START_ANGLE + ratio * CSS_SWEEP
 
   const tickMarks = useMemo(() => {
     const ticks = []
     const numTicks = 10
     for (let i = 0; i <= numTicks; i++) {
-      const angle = START_ANGLE + (i / numTicks) * ARC_SWEEP
+      const angle = SVG_START_ANGLE + (i / numTicks) * ARC_SWEEP
       const rad = (angle * Math.PI) / 180
       const innerR = r - 3
       const outerR = r + 1
@@ -54,29 +58,21 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
     return ticks
   }, [cx, cy, r])
 
-  const displayValue = isNaN(valor) ? "---" : valor.toFixed(1)
-
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <defs>
-        <linearGradient id="track-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--border)" />
-          <stop offset="100%" stopColor="var(--border)" stopOpacity="0.4" />
-        </linearGradient>
-      </defs>
-
       <path
-        d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
-          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
+        d={`M ${cx + r * Math.cos((SVG_START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((SVG_START_ANGLE * Math.PI) / 180)}
+          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((SVG_END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((SVG_END_ANGLE * Math.PI) / 180)}`}
         fill="none"
-        stroke="url(#track-bg)"
+        stroke="var(--border)"
         strokeWidth="2.5"
         strokeLinecap="round"
+        opacity="0.4"
       />
 
       <path
-        d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
-          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
+        d={`M ${cx + r * Math.cos((SVG_START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((SVG_START_ANGLE * Math.PI) / 180)}
+          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((SVG_END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((SVG_END_ANGLE * Math.PI) / 180)}`}
         fill="none"
         stroke={color}
         strokeWidth="3"
@@ -126,17 +122,6 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         fill={color}
         style={{ transition: "fill 300ms ease" }}
       />
-
-      <text
-        x={cx}
-        y={cy + 18}
-        textAnchor="middle"
-        fill="var(--text)"
-        fontSize="11"
-        className="dial-value"
-      >
-        {displayValue}
-      </text>
     </svg>
   )
 }
