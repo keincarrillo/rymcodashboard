@@ -19,7 +19,7 @@ interface LineChartProps {
   unit?: string
 }
 
-export function LineChart({ data, color = "#7c3aed", unit = "" }: LineChartProps) {
+export function LineChart({ data, color = "#60a5fa", unit = "" }: LineChartProps) {
   const gradientId = `line-grad-${color.replace("#", "")}`
 
   return (
