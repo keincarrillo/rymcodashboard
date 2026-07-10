@@ -20,7 +20,7 @@ interface BarChartProps {
   unit?: string
 }
 
-const BAR_COLORS = ["#7c3aed", "#a78bfa", "#c084fc"]
+const BAR_COLORS = ["#2563eb", "#60a5fa", "#93c5fd"]
 
 export function BarChart({ data, unit = "" }: BarChartProps) {
   return (
@@ -48,7 +48,7 @@ export function BarChart({ data, unit = "" }: BarChartProps) {
           contentStyle={{
             background: "var(--elevated)",
             border: "2px solid var(--border)",
-            borderRadius: "0",
+            borderRadius: "6px",
             fontSize: "9px",
             fontFamily: "'SF Mono', ui-monospace, monospace",
             fontWeight: "700",

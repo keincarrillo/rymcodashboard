@@ -53,7 +53,7 @@ export function LineChart({ data, color = "#7c3aed", unit = "" }: LineChartProps
           contentStyle={{
             background: "var(--elevated)",
             border: "2px solid var(--border)",
-            borderRadius: "0",
+            borderRadius: "6px",
             fontSize: "9px",
             fontFamily: "'SF Mono', ui-monospace, monospace",
             fontWeight: "700",

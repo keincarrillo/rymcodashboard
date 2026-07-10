@@ -18,8 +18,8 @@ describe("getColor", () => {
     expect(getColor(50, 0, 100, "Detenido")).toBe("stop")
   })
 
-  it("returns purple when min and max are 0", () => {
-    expect(getColor(50, 0, 0, "Produciendo")).toBe("purple")
+  it("returns accent when min and max are 0", () => {
+    expect(getColor(50, 0, 0, "Produciendo")).toBe("accent")
   })
 
   it("returns red when value is below min", () => {
@@ -30,8 +30,8 @@ describe("getColor", () => {
     expect(getColor(150, 0, 100, "Produciendo")).toBe("red")
   })
 
-  it("returns green when value is in the safe middle range", () => {
-    expect(getColor(50, 0, 100, "Produciendo")).toBe("green")
+  it("returns accent when value is in the safe middle range", () => {
+    expect(getColor(50, 0, 100, "Produciendo")).toBe("accent")
   })
 
   it("returns orange when value is in warning zone (lower)", () => {
@@ -42,7 +42,7 @@ describe("getColor", () => {
     expect(getColor(90, 0, 100, "Produciendo")).toBe("orange")
   })
 
-  it("returns green for exact midpoint", () => {
-    expect(getColor(50, 0, 100, "Produciendo")).toBe("green")
+  it("returns accent for exact midpoint", () => {
+    expect(getColor(50, 0, 100, "Produciendo")).toBe("accent")
   })
 })

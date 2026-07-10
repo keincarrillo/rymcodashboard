@@ -1,1 +1,1 @@
-export type Colors = "black" | "stop" | "purple" | "orange" | "red" | "green"
+export type Colors = "black" | "stop" | "accent" | "orange" | "red" | "green"
