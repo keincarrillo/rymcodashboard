@@ -13,7 +13,7 @@ interface DialGaugeProps {
 
 const START_ANGLE = -225
 const END_ANGLE = 45
-const ARC_SWEEP = END_ANGLE - START_ANGLE // 270
+const ARC_SWEEP = END_ANGLE - START_ANGLE
 
 export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps) {
   const colorKey = getColor(valor, min, max, estado)
@@ -29,12 +29,11 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
   }, [r])
 
   const ratio = useMemo(() => {
-    if (max <= min) return 0
+    if (isNaN(valor) || max <= min) return 0
     return Math.max(0, Math.min(1, (valor - min) / (max - min)))
   }, [valor, min, max])
 
   const dashOffset = arcCircumference * (1 - ratio)
-
   const needleAngle = START_ANGLE + ratio * ARC_SWEEP
 
   const tickMarks = useMemo(() => {
@@ -61,12 +60,11 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
       <defs>
         <linearGradient id="track-bg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="var(--border-color)" />
-          <stop offset="100%" stopColor="var(--border-color)" stopOpacity="0.5" />
+          <stop offset="0%" stopColor="var(--border)" />
+          <stop offset="100%" stopColor="var(--border)" stopOpacity="0.4" />
         </linearGradient>
       </defs>
 
-      {/* Track arc — dashed approach with one full arc path */}
       <path
         d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
           A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
@@ -76,7 +74,6 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         strokeLinecap="round"
       />
 
-      {/* Active arc — uses stroke-dasharray for smooth animation */}
       <path
         d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
           A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
@@ -88,7 +85,6 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         strokeDashoffset={dashOffset}
         style={{
           transition: "stroke-dashoffset 600ms cubic-bezier(0.16, 1, 0.3, 1), stroke 300ms ease",
-          filter: "drop-shadow(0 0 4px currentColor)",
         }}
       />
 
@@ -99,13 +95,12 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
           y1={tick.y1}
           x2={tick.x2}
           y2={tick.y2}
-          stroke="var(--border-color)"
+          stroke="var(--border)"
           strokeWidth="1"
           opacity={0.35}
         />
       ))}
 
-      {/* Needle group — rotated for smooth CSS transition */}
       <g
         style={{
           transformOrigin: `${cx}px ${cy}px`,
@@ -129,21 +124,16 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         cy={cy}
         r={2.8}
         fill={color}
-        style={{
-          transition: "fill 300ms ease",
-          filter: "drop-shadow(0 0 3px currentColor)",
-        }}
+        style={{ transition: "fill 300ms ease" }}
       />
 
       <text
         x={cx}
         y={cy + 18}
         textAnchor="middle"
-        fill="var(--text-color)"
+        fill="var(--text)"
         fontSize="11"
-        fontFamily="'JetBrains Mono', ui-monospace, monospace"
-        fontWeight="700"
-        fontFeatureSettings="'tnum'"
+        className="dial-value"
       >
         {displayValue}
       </text>

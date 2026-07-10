@@ -8,13 +8,13 @@ interface ItemProps {
 
 export function Item({ icon: Icon, label, value }: ItemProps) {
   return (
-    <div className="flex items-center gap-2.5">
-      <div className="w-6 h-6 rounded radius-card bg-[var(--input-bg)] border border-[var(--border-color)] flex items-center justify-center shrink-0">
-        <Icon size={10} className="text-[var(--text-muted)]" />
+    <div className="flex items-center gap-3">
+      <div className="w-7 h-7 border-2 border-[var(--border)] bg-[var(--input-bg)] flex items-center justify-center shrink-0">
+        <Icon size={11} className="text-[var(--muted)]" />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[8px] font-mono uppercase tracking-[0.12em] text-[var(--text-muted)] font-medium">{label}</p>
-        <p className="text-xs font-mono font-semibold truncate text-[var(--text-color)]">{value}</p>
+        <p className="text-[8px] font-mono uppercase tracking-[0.1em] text-[var(--muted)] font-bold">{label}</p>
+        <p className="text-xs font-mono font-extrabold truncate text-[var(--text)]">{value}</p>
       </div>
     </div>
   )

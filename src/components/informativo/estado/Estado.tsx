@@ -8,17 +8,17 @@ export function Estado({ estado }: EstadoProps) {
   const isRunning = estado === "Corriendo"
 
   return (
-    <div className={`flex items-center gap-2.5 ${isRunning ? "text-[var(--color-running)]" : "text-[var(--text-color)]"}`}>
-      <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${isRunning ? "bg-[var(--color-running)]/15 border border-[var(--color-running)]/20" : "bg-[var(--input-bg)] border border-[var(--border-color)]"}`}>
+    <div className="flex items-center gap-3">
+      <div className={`w-9 h-9 border-2 flex items-center justify-center ${isRunning ? "border-[var(--accent)] bg-[var(--accent-dim)]" : "border-[var(--border)] bg-[var(--input-bg)]"}`}>
         {isRunning ? (
-          <Play size={13} className="fill-[var(--color-running)] text-[var(--color-running)]" />
+          <Play size={14} className="fill-[var(--accent-bright)] text-[var(--accent-bright)]" />
         ) : (
-          <Square size={13} className="text-[var(--text-muted)]" />
+          <Square size={14} className="text-[var(--muted)]" />
         )}
       </div>
       <div>
-        <p className="text-[9px] font-mono uppercase tracking-[0.12em] text-[var(--text-muted)] font-medium">Estado</p>
-        <p className={`text-sm font-bold ${isRunning ? "text-[var(--color-running)]" : "text-[var(--text-color)]"}`}>{estado}</p>
+        <p className="text-[8px] font-mono uppercase tracking-[0.1em] text-[var(--muted)] font-bold">Estado</p>
+        <p className={`text-sm font-extrabold ${isRunning ? "text-[var(--accent-bright)]" : "text-[var(--text)]"}`}>{estado}</p>
       </div>
     </div>
   )

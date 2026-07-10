@@ -16,7 +16,7 @@ export function getColor(
   const rangoInferior = (min + media) / 2
   const rangoSuperior = (media + max) / 2
 
-  if (valor >= rangoInferior && valor <= rangoSuperior) return "green"
+  if (valor >= rangoInferior && valor <= rangoSuperior) return "purple"
 
   return "orange"
 }
