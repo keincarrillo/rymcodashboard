@@ -7,7 +7,7 @@ interface PanelProps {
 
 export function Panel({ children, className = "" }: PanelProps) {
   return (
-    <div className={`bg-[var(--panel-color)] rounded-xl border border-gray-700 p-4 ${className}`}>
+    <div className={`bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-3 ${className}`}>
       {children}
     </div>
   )

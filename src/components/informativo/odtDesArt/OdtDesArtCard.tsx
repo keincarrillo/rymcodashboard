@@ -10,12 +10,14 @@ export function OdtDesArtCard({ odtArtDesc }: OdtDesArtCardProps) {
   const { odt, articulo, descripcion } = odtArtDesc
 
   return (
-    <div className="bg-[var(--panel-color)] rounded-xl border border-gray-700 p-4">
-      <h3 className="text-sm font-medium mb-3 opacity-70">Orden de Trabajo</h3>
-      <div className="space-y-3">
+    <div className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] overflow-hidden">
+      <div className="px-3 py-2 border-b border-[var(--border-color)]">
+        <h3 className="text-[10px] font-mono uppercase tracking-[0.2em] text-[var(--text-muted)]">Orden de Trabajo</h3>
+      </div>
+      <div className="p-3 space-y-2">
         <Item icon={FileText} label="ODT" value={odt} />
-        <Item icon={Package} label="Artículo" value={articulo} />
-        <Item icon={Info} label="Descripción" value={descripcion} />
+        <Item icon={Package} label="Articulo" value={articulo} />
+        <Item icon={Info} label="Descripcion" value={descripcion} />
       </div>
     </div>
   )
