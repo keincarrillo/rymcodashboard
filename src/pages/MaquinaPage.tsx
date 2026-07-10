@@ -7,21 +7,41 @@ import { OdtDesArtCard } from "../components/informativo/odtDesArt/OdtDesArtCard
 import { TonejaleCard } from "../components/informativo/produccion/TonejaleCard"
 import { ChartPanel } from "../components/graficas/ChartPanel"
 import { AlarmList } from "../components/alarmas/AlarmList"
+import { Skeleton, CardSkeleton, DialSkeleton, ChartSkeleton } from "../components/ui/Skeleton"
 
 export function MaquinaPage() {
   const { id } = useParams<{ id: string }>()
-  const { getMaquina } = useSocket()
+  const { getMaquina, isConnected } = useSocket()
   const { alarmasActivas, limpiarAlarma } = useAlarmas()
 
   const maquina = id ? getMaquina(id) : undefined
   const alarmasMaquina = alarmasActivas.filter((a) => a.maquinaId === id)
+
+  if (!maquina && !isConnected) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-48" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <CardSkeleton />
+          <CardSkeleton />
+          <CardSkeleton />
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <DialSkeleton key={i} />
+          ))}
+        </div>
+        <ChartSkeleton />
+      </div>
+    )
+  }
 
   if (!maquina) {
     return (
       <div className="space-y-6">
         <h2 className="text-2xl font-bold">Máquina: {id}</h2>
         <div className="p-4 bg-[var(--panel-color)] rounded-xl border border-gray-700">
-          <p className="opacity-70">Esperando datos de la máquina...</p>
+          <p className="opacity-70">Esperando datos de esta máquina...</p>
         </div>
       </div>
     )
