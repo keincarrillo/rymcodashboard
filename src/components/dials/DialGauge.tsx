@@ -15,8 +15,6 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
   const colorKey = getColor(valor, min, max, estado)
   const color = COLORS[colorKey]
 
-  const filterId = useMemo(() => `glow-${Math.random().toString(36).slice(2, 8)}`, [])
-
   const { arcPath, needleAngle, displayValue } = useMemo(() => {
     const startAngle = -225
     const endAngle = 45
@@ -80,33 +78,17 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <defs>
-        <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
-      </defs>
-
       <circle
         cx={cx}
         cy={cy}
         r={r}
-        fill="none"
         className="dial-track"
-        strokeWidth="4"
-        strokeLinecap="round"
       />
 
       <path
         d={arcPath}
-        fill="none"
+        className="dial-arc"
         stroke={color}
-        strokeWidth="4"
-        strokeLinecap="round"
-        filter={`url(#${filterId})`}
       />
 
       {tickMarks.map((tick, i) => (
@@ -127,12 +109,17 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         y1={cy}
         x2={cx + (r - 10) * Math.cos((needleAngle * Math.PI) / 180)}
         y2={cy + (r - 10) * Math.sin((needleAngle * Math.PI) / 180)}
+        className="dial-needle"
         stroke={color}
-        strokeWidth="2"
-        strokeLinecap="round"
       />
 
-      <circle cx={cx} cy={cy} r="2.5" fill={color} />
+      <circle
+        cx={cx}
+        cy={cy}
+        r={2.5}
+        className="dial-needle-pivot"
+        fill={color}
+      />
 
       <text
         x={cx}
@@ -140,8 +127,6 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
         textAnchor="middle"
         className="dial-value"
         fontSize="11"
-        fontFamily="JetBrains Mono, monospace"
-        fontWeight="700"
       >
         {displayValue}
       </text>
