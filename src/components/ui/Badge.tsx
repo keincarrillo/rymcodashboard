@@ -9,16 +9,16 @@ interface BadgeProps {
 }
 
 const VARIANT_STYLES: Record<BadgeVariant, string> = {
-  default: "bg-gray-500/20 text-gray-400",
-  success: "bg-green-500/20 text-green-400",
-  warning: "bg-orange-500/20 text-orange-400",
-  danger: "bg-red-500/20 text-red-400",
-  info: "bg-blue-500/20 text-blue-400",
+  default: "bg-[var(--hover-bg)] text-[var(--text-muted)]",
+  success: "bg-[var(--color-running)]/15 text-[var(--color-running)]",
+  warning: "bg-[var(--color-warn)]/15 text-[var(--color-warn)]",
+  danger: "bg-[var(--color-danger)]/15 text-[var(--color-danger)]",
+  info: "bg-[var(--accent)]/15 text-[var(--accent)]",
 }
 
 export function Badge({ children, variant = "default", className = "" }: BadgeProps) {
   return (
-    <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${VARIANT_STYLES[variant]} ${className}`}>
+    <span className={`text-[8px] font-mono px-1.5 py-0.5 radius-badge font-bold uppercase tracking-wider ${VARIANT_STYLES[variant]} ${className}`}>
       {children}
     </span>
   )

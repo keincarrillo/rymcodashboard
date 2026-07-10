@@ -11,16 +11,18 @@ interface DialGaugeProps {
   size?: number
 }
 
-export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProps) {
+export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps) {
   const colorKey = getColor(valor, min, max, estado)
   const color = COLORS[colorKey]
+
+  const filterId = useMemo(() => `glow-${Math.random().toString(36).slice(2, 8)}`, [])
 
   const { arcPath, needleAngle, displayValue } = useMemo(() => {
     const startAngle = -225
     const endAngle = 45
     const totalAngle = endAngle - startAngle
 
-    const r = size / 2 - 10
+    const r = size / 2 - 6
     const cx = size / 2
     const cy = size / 2
 
@@ -51,7 +53,7 @@ export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProp
 
   const cx = size / 2
   const cy = size / 2
-  const r = size / 2 - 10
+  const r = size / 2 - 6
 
   const tickMarks = useMemo(() => {
     const ticks = []
@@ -63,8 +65,8 @@ export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProp
     for (let i = 0; i <= numTicks; i++) {
       const angle = startAngle + (i / numTicks) * totalAngle
       const rad = (angle * Math.PI) / 180
-      const innerR = r - 5
-      const outerR = r + 2
+      const innerR = r - 3
+      const outerR = r + 1
 
       ticks.push({
         x1: cx + innerR * Math.cos(rad),
@@ -78,13 +80,23 @@ export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProp
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
+      <defs>
+        <filter id={filterId} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
       <circle
         cx={cx}
         cy={cy}
         r={r}
         fill="none"
-        stroke="#374151"
-        strokeWidth="8"
+        className="dial-track"
+        strokeWidth="4"
         strokeLinecap="round"
       />
 
@@ -92,8 +104,9 @@ export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProp
         d={arcPath}
         fill="none"
         stroke={color}
-        strokeWidth="8"
+        strokeWidth="4"
         strokeLinecap="round"
+        filter={`url(#${filterId})`}
       />
 
       {tickMarks.map((tick, i) => (
@@ -103,30 +116,32 @@ export function DialGauge({ valor, min, max, estado, size = 120 }: DialGaugeProp
           y1={tick.y1}
           x2={tick.x2}
           y2={tick.y2}
-          stroke="#6b7280"
-          strokeWidth="2"
+          className="dial-tick"
+          strokeWidth="1"
+          opacity={0.3}
         />
       ))}
 
       <line
         x1={cx}
         y1={cy}
-        x2={cx + (r - 15) * Math.cos((needleAngle * Math.PI) / 180)}
-        y2={cy + (r - 15) * Math.sin((needleAngle * Math.PI) / 180)}
+        x2={cx + (r - 10) * Math.cos((needleAngle * Math.PI) / 180)}
+        y2={cy + (r - 10) * Math.sin((needleAngle * Math.PI) / 180)}
         stroke={color}
-        strokeWidth="3"
+        strokeWidth="2"
         strokeLinecap="round"
       />
 
-      <circle cx={cx} cy={cy} r="5" fill={color} />
+      <circle cx={cx} cy={cy} r="2.5" fill={color} />
 
       <text
         x={cx}
-        y={cy + 25}
+        y={cy + 18}
         textAnchor="middle"
-        fill="currentColor"
-        fontSize="14"
-        fontWeight="bold"
+        className="dial-value"
+        fontSize="11"
+        fontFamily="JetBrains Mono, monospace"
+        fontWeight="700"
       >
         {displayValue}
       </text>

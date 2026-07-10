@@ -8,25 +8,25 @@ export function AlarmPanel() {
   const [isExpanded, setIsExpanded] = useState(true)
 
   return (
-    <div className="bg-[var(--panel-color)] rounded-xl border border-gray-700 overflow-hidden">
+    <div className="bg-[var(--surface-color)] radius-card border border-[var(--border-color)] overflow-hidden">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition-colors"
+        className="w-full px-2 py-1.5 flex items-center justify-between hover:bg-[var(--hover-bg)] transition-colors"
       >
-        <div className="flex items-center gap-2">
-          <Bell size={16} className={alarmasActivas.length > 0 ? "text-red-500" : "opacity-50"} />
-          <span className="text-sm font-medium">Alarmas</span>
+        <div className="flex items-center gap-1.5">
+          <Bell size={10} className={alarmasActivas.length > 0 ? "text-[var(--color-danger)]" : "text-[var(--text-muted)]"} />
+          <span className="text-[9px] font-mono">Alarmas</span>
           {alarmasActivas.length > 0 && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-400 font-medium">
+            <span className="text-[8px] font-mono px-1 py-0.5 radius-badge bg-[var(--color-danger)]/15 text-[var(--color-danger)] font-bold">
               {alarmasActivas.length}
             </span>
           )}
         </div>
-        {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+        {isExpanded ? <ChevronUp size={8} className="text-[var(--text-muted)]" /> : <ChevronDown size={8} className="text-[var(--text-muted)]" />}
       </button>
 
       {isExpanded && (
-        <div className="border-t border-gray-700 max-h-64 overflow-y-auto">
+        <div className="border-t border-[var(--border-color)] max-h-48 overflow-y-auto">
           <AlarmList alarmas={alarmasActivas} onDismiss={limpiarAlarma} />
         </div>
       )}

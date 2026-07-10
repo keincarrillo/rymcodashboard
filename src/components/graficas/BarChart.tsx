@@ -11,27 +11,30 @@ interface BarChartProps {
   unit?: string
 }
 
-export function BarChart({ data, color = "#22c55e", unit = "" }: BarChartProps) {
+export function BarChart({ data, color = "#10b981", unit = "" }: BarChartProps) {
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <RechartsBarChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+    <ResponsiveContainer width="100%" height={160}>
+      <RechartsBarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
         <XAxis
           dataKey="name"
-          stroke="#6b7280"
-          fontSize={12}
+          stroke="var(--text-muted)"
+          fontSize={8}
+          fontFamily="JetBrains Mono, monospace"
           tickLine={false}
         />
-        <YAxis stroke="#6b7280" fontSize={12} tickLine={false} />
+        <YAxis stroke="var(--text-muted)" fontSize={8} fontFamily="JetBrains Mono, monospace" tickLine={false} />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#1e293b",
-            border: "1px solid #374151",
-            borderRadius: "8px",
+            backgroundColor: "var(--elevated-color)",
+            border: "1px solid var(--border-color)",
+            borderRadius: "4px",
+            fontSize: "9px",
+            fontFamily: "JetBrains Mono, monospace",
           }}
           formatter={(value) => [`${value}${unit}`, "Valor"]}
         />
-        <Bar dataKey="value" fill={color} radius={[4, 4, 0, 0]} />
+        <Bar dataKey="value" fill={color} radius={[2, 2, 0, 0]} />
       </RechartsBarChart>
     </ResponsiveContainer>
   )

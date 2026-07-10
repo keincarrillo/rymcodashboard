@@ -11,23 +11,26 @@ interface LineChartProps {
   unit?: string
 }
 
-export function LineChart({ data, color = "#3b82f6", unit = "" }: LineChartProps) {
+export function LineChart({ data, color = "#10b981", unit = "" }: LineChartProps) {
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <RechartsLineChart data={data} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+    <ResponsiveContainer width="100%" height={160}>
+      <RechartsLineChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-color)" />
         <XAxis
           dataKey="time"
-          stroke="#6b7280"
-          fontSize={12}
+          stroke="var(--text-muted)"
+          fontSize={8}
+          fontFamily="JetBrains Mono, monospace"
           tickLine={false}
         />
-        <YAxis stroke="#6b7280" fontSize={12} tickLine={false} />
+        <YAxis stroke="var(--text-muted)" fontSize={8} fontFamily="JetBrains Mono, monospace" tickLine={false} />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#1e293b",
-            border: "1px solid #374151",
-            borderRadius: "8px",
+            backgroundColor: "var(--elevated-color)",
+            border: "1px solid var(--border-color)",
+            borderRadius: "4px",
+            fontSize: "9px",
+            fontFamily: "JetBrains Mono, monospace",
           }}
           formatter={(value) => [`${value}${unit}`, "Valor"]}
         />
@@ -35,9 +38,9 @@ export function LineChart({ data, color = "#3b82f6", unit = "" }: LineChartProps
           type="monotone"
           dataKey="value"
           stroke={color}
-          strokeWidth={2}
+          strokeWidth={1.5}
           dot={false}
-          activeDot={{ r: 6 }}
+          activeDot={{ r: 3, fill: color }}
         />
       </RechartsLineChart>
     </ResponsiveContainer>

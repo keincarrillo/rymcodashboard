@@ -1,34 +1,132 @@
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;700&display=swap");
 
 @theme {
-  --color-dark-bg: #0f172a;
-  --color-dark-panel: #1e293b;
-  --color-dark-text: #f8fafc;
-  --color-light-bg: #ffffff;
-  --color-light-panel: #f1f5f9;
-  --color-light-text: #0f172a;
+  --color-dark-bg: #09090b;
+  --color-dark-surface: #111114;
+  --color-dark-elevated: #1c1c21;
+  --color-dark-border: #27272a;
+  --color-dark-text: #fafafa;
+  --color-dark-muted: #71717a;
+  --color-accent: #10b981;
+  --color-accent-dim: rgba(16, 185, 129, 0.12);
+  --color-warn: #f59e0b;
+  --color-warn-dim: rgba(245, 158, 11, 0.12);
+  --color-danger: #ef4444;
+  --color-danger-dim: rgba(239, 68, 68, 0.12);
+  --color-running: #22c55e;
+  --color-stopped: #71717a;
+  --color-fault: #ef4444;
+  --color-light-bg: #fafafa;
+  --color-light-surface: #ffffff;
+  --color-light-elevated: #f4f4f5;
+  --color-light-border: #e4e4e7;
+  --color-light-text: #18181b;
+  --color-light-muted: #a1a1aa;
 }
 
 :root {
   --bg-color: var(--color-dark-bg);
-  --panel-color: var(--color-dark-panel);
+  --surface-color: var(--color-dark-surface);
+  --elevated-color: var(--color-dark-elevated);
+  --border-color: var(--color-dark-border);
   --text-color: var(--color-dark-text);
+  --text-muted: var(--color-dark-muted);
+  --panel-color: var(--color-dark-surface);
+  --hover-border: #3f3f46;
+  --hover-bg: rgba(255, 255, 255, 0.04);
+  --input-bg: #09090b;
+  --accent: var(--color-accent);
+  --accent-dim: var(--color-accent-dim);
 }
 
 .light {
   --bg-color: var(--color-light-bg);
-  --panel-color: var(--color-light-panel);
+  --surface-color: var(--color-light-surface);
+  --elevated-color: var(--color-light-elevated);
+  --border-color: var(--color-light-border);
   --text-color: var(--color-light-text);
+  --text-muted: var(--color-light-muted);
+  --panel-color: var(--color-light-surface);
+  --hover-border: #d4d4d8;
+  --hover-bg: rgba(0, 0, 0, 0.03);
+  --input-bg: var(--color-light-elevated);
+  --accent: #059669;
+  --accent-dim: rgba(5, 150, 105, 0.08);
 }
 
 body {
   background-color: var(--bg-color);
   color: var(--text-color);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "ss01", "ss02", "cv01";
+}
+
+.font-mono {
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  font-feature-settings: "tnum";
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+/* SVG dial elements */
+.dial-track {
+  stroke: var(--border-color);
+}
+.dial-tick {
+  stroke: var(--text-muted);
+}
+.dial-value {
+  fill: var(--text-color);
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Shape system — tiered corner radius */
+.radius-card { border-radius: 6px; }
+.radius-panel { border-radius: 8px; }
+.radius-badge { border-radius: 4px; }
+.radius-button { border-radius: 6px; }
+
+/* Theme-aware hover */
+.hover-surface {
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+.hover-surface:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--hover-border);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

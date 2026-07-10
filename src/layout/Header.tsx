@@ -10,26 +10,32 @@ export function Header({ onToggleSidebar }: HeaderProps) {
   const { isDark, toggleTema } = useTema()
 
   return (
-    <header className="bg-[var(--panel-color)] border-b border-gray-700 px-4 py-3 flex items-center justify-between">
+    <header className="bg-[var(--surface-color)] border-b border-[var(--border-color)] px-4 py-2 flex items-center justify-between shrink-0">
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="p-2 rounded-lg hover:bg-gray-700 transition-colors lg:hidden"
+          className="p-1.5 radius-button hover:bg-[var(--hover-bg)] transition-colors lg:hidden"
           aria-label="Toggle sidebar"
         >
-          <Menu size={20} />
+          <Menu size={18} className="text-[var(--text-muted)]" />
         </button>
-        <img src="/favicon.svg" alt="RYMCO" className="h-8" />
-        <h1 className="text-xl font-bold">RYMCO Dashboard</h1>
+        <div className="flex items-center gap-2">
+          <img src="/favicon.svg" alt="RYMCO" className="h-6" />
+          <div className="flex items-baseline gap-1.5">
+            <span className="text-sm font-bold tracking-wide text-[var(--text-color)]">RYMCO</span>
+            <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-[var(--text-muted)]">Digital Twin</span>
+          </div>
+        </div>
       </div>
       <div className="flex items-center gap-4">
         <ConnectionStatus />
-        <span className="text-sm opacity-70 hidden sm:inline">Tibo Conduit</span>
+        <div className="h-4 w-px bg-[var(--border-color)] hidden sm:block" />
+        <span className="text-[10px] font-mono text-[var(--text-muted)] hidden sm:inline">Tibo Conduit</span>
         <button
           onClick={toggleTema}
-          className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
+          className="p-1.5 radius-button hover:bg-[var(--hover-bg)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-color)]"
         >
-          {isDark ? <Sun size={20} /> : <Moon size={20} />}
+          {isDark ? <Sun size={14} /> : <Moon size={14} />}
         </button>
       </div>
     </header>

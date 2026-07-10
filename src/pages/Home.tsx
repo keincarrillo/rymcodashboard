@@ -1,22 +1,34 @@
-import { Link } from "react-router-dom"
+import { useSocket } from "../hooks/useSocket"
 import { MAQUINAS } from "../config/maquinas"
+import { MachinePanel } from "../components/overview/MachinePanel"
 
 export function Home() {
+  const { getMaquina, isConnected } = useSocket()
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Bienvenido al Dashboard RYMCO</h2>
-      <p className="opacity-70">Selecciona una máquina del panel lateral para ver sus detalles.</p>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {MAQUINAS.map((m) => (
-          <Link
-            key={m.id}
-            to={`/maquina/${m.id}`}
-            className="block p-4 bg-[var(--panel-color)] rounded-xl border border-gray-700 hover:border-blue-500 transition-colors"
-          >
-            <h3 className="text-lg font-semibold">{m.nombre}</h3>
-            <p className="text-sm opacity-70">ID: {m.id}</p>
-          </Link>
-        ))}
+    <div className="p-4 h-full overflow-y-auto">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold">Overview</h2>
+        <span className="text-[10px] font-mono text-[var(--text-muted)] shrink-0">
+          {isConnected ? "Conectado" : "Sin conexion"}
+        </span>
+      </div>
+
+      <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-3 overflow-hidden">
+        {MAQUINAS.map((m) => {
+          const maquina = getMaquina(m.id)
+          if (!maquina) {
+            return (
+              <div key={m.id} className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-3">
+                <h2 className="text-sm font-bold mb-2">{m.nombre}</h2>
+                <div className="p-2 bg-[var(--input-bg)] radius-card border border-[var(--elevated-color)]">
+                  <p className="text-[9px] font-mono text-[var(--text-muted)] text-center uppercase tracking-widest">Sin datos</p>
+                </div>
+              </div>
+            )
+          }
+          return <MachinePanel key={m.id} maquina={maquina} />
+        })}
       </div>
     </div>
   )
