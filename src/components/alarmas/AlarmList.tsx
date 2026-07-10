@@ -9,8 +9,8 @@ interface AlarmListProps {
 export function AlarmList({ alarmas, onDismiss }: AlarmListProps) {
   if (alarmas.length === 0) {
     return (
-      <div className="p-2 text-center text-[var(--text-muted)] text-[9px] font-mono">
-        There are no active alarms
+      <div className="p-3 text-center text-[var(--text-muted)] text-[9px] font-mono">
+        Sin alarmas activas
       </div>
     )
   }
