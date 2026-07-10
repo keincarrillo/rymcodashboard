@@ -1,30 +1,29 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark-bg: #07050a;
-  --color-dark-surface: #0e0b16;
-  --color-dark-elevated: #161129;
-  --color-dark-border: #231d38;
-  --color-dark-text: #f1eeff;
-  --color-dark-muted: #6d6896;
-  --color-accent: #7c3aed;
-  --color-accent-bright: #a78bfa;
-  --color-accent-dim: rgba(124, 58, 237, 0.1);
-  --color-accent-glow: rgba(124, 58, 237, 0.25);
-  --color-secondary: #ec4899;
-  --color-warn: #f59e0b;
-  --color-warn-dim: rgba(245, 158, 11, 0.1);
-  --color-danger: #ef4444;
-  --color-danger-dim: rgba(239, 68, 68, 0.1);
-  --color-running: #7c3aed;
-  --color-stopped: #6d6896;
-  --color-fault: #ef4444;
-  --color-light-bg: #f4f2f7;
+  --color-dark-bg: #07080c;
+  --color-dark-surface: #0e1018;
+  --color-dark-elevated: #161a26;
+  --color-dark-border: #252a3a;
+  --color-dark-text: #f0f2f8;
+  --color-dark-muted: #6b7394;
+  --color-accent: #2563eb;
+  --color-accent-bright: #60a5fa;
+  --color-accent-dim: rgba(37, 99, 235, 0.1);
+  --color-secondary: #06b6d4;
+  --color-warn: #d97706;
+  --color-warn-dim: rgba(217, 119, 6, 0.1);
+  --color-danger: #dc2626;
+  --color-danger-dim: rgba(220, 38, 38, 0.1);
+  --color-running: #2563eb;
+  --color-stopped: #6b7394;
+  --color-fault: #dc2626;
+  --color-light-bg: #f2f4f8;
   --color-light-surface: #ffffff;
-  --color-light-elevated: #eceaeF;
-  --color-light-border: #d4d0e0;
-  --color-light-text: #0f0d1a;
-  --color-light-muted: #8b84a0;
+  --color-light-elevated: #e8ebf2;
+  --color-light-border: #c8cdda;
+  --color-light-text: #0d111a;
+  --color-light-muted: #7c85a0;
 }
 
 :root {
@@ -34,9 +33,9 @@
   --border: var(--color-dark-border);
   --text: var(--color-dark-text);
   --muted: var(--color-dark-muted);
-  --hover-bg: rgba(255, 255, 255, 0.04);
-  --hover-border: #2f2550;
-  --input-bg: #090713;
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --hover-border: #2f3650;
+  --input-bg: #090b12;
   --accent: var(--color-accent);
   --accent-bright: var(--color-accent-bright);
   --accent-dim: var(--color-accent-dim);
@@ -44,7 +43,6 @@
   --running: var(--color-accent);
   --warn: var(--color-warn);
   --fault: var(--color-fault);
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .light {
@@ -55,16 +53,15 @@
   --text: var(--color-light-text);
   --muted: var(--color-light-muted);
   --hover-bg: rgba(0, 0, 0, 0.04);
-  --hover-border: #c8c0d8;
+  --hover-border: #b0b8ca;
   --input-bg: var(--color-light-elevated);
-  --accent: #6d28d9;
-  --accent-bright: #7c3aed;
-  --accent-dim: rgba(109, 40, 217, 0.08);
-  --secondary: #db2777;
+  --accent: #1d4ed8;
+  --accent-bright: #2563eb;
+  --accent-dim: rgba(29, 78, 216, 0.08);
+  --secondary: #0891b2;
   --running: var(--accent);
-  --warn: #d97706;
+  --warn: #b45309;
   --fault: #dc2626;
-  --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* ─── Base ─── */
@@ -74,11 +71,6 @@ body {
   color: var(--text);
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  position: relative;
-}
-
-#root {
-  height: 100%;
 }
 
 html, body, #root {
@@ -97,13 +89,13 @@ html, body, #root {
   font-feature-settings: "tnum" !important;
 }
 
-/* ─── No rounded corners — brutalist ─── */
+/* ─── Rounded corners ─── */
 
-.radius-card, .radius-panel, .radius-badge, .radius-button, .radius-xl, .radius-full {
-  border-radius: 0 !important;
+.card, .panel, .btn {
+  border-radius: 6px;
 }
 
-/* ─── Card / Panel base ─── */
+/* ─── Card / Panel ─── */
 
 .card {
   background: var(--surface);
@@ -138,10 +130,10 @@ html, body, #root {
 /* ─── Section headers ─── */
 
 .section-label {
-  font-size: 10px;
-  font-weight: 700;
+  font-size: 11px;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--muted);
 }
 
@@ -183,8 +175,8 @@ html, body, #root {
 
 .status {
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   flex-shrink: 0;
 }
 
@@ -215,10 +207,10 @@ html, body, #root {
   color: var(--text);
   font-family: "SF Mono", ui-monospace, "JetBrains Mono", monospace;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 4px 10px;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
   cursor: pointer;
   transition: border-color 150ms ease, background 150ms ease;
 }
@@ -241,10 +233,7 @@ html, body, #root {
 
 /* ─── Scrollbar ─── */
 
-::-webkit-scrollbar {
-  width: 3px;
-  height: 3px;
-}
+::-webkit-scrollbar { width: 3px; height: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); }
 ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
