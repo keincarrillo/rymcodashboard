@@ -39,14 +39,14 @@ export function AlarmItem({ alarma, onDismiss }: AlarmItemProps) {
   const style = SEVERIDAD_STYLES[alarma.severidad]
 
   return (
-    <div className="bg-[var(--input-bg)] border border-[var(--border-color)] radius-card p-2 flex items-start gap-2 group">
+    <div className="bg-[var(--input-bg)] border border-[var(--border-color)] radius-card p-3 flex items-start gap-3 group">
       <div
         className="w-0.5 h-full min-h-[28px] rounded-full shrink-0"
         style={{ backgroundColor: style.accent }}
       />
 
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+        <div className="flex items-center gap-2 mb-1 flex-wrap">
           <span className={`text-[8px] font-mono px-1 py-0.5 radius-badge font-bold ${style.badge}`}>
             {style.label}
           </span>
@@ -64,10 +64,10 @@ export function AlarmItem({ alarma, onDismiss }: AlarmItemProps) {
 
       <button
         onClick={() => onDismiss(alarma.id)}
-        className="shrink-0 p-0.5 radius-button hover:bg-[var(--hover-bg)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-color)]"
+        className="shrink-0 p-1 radius-button hover:bg-[var(--hover-bg)] transition-colors text-[var(--text-muted)] hover:text-[var(--text-color)]"
         title="Descartar"
       >
-        <XCircle size={10} />
+        <XCircle size={12} />
       </button>
     </div>
   )

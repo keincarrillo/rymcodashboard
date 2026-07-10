@@ -1,55 +1,48 @@
-import { ExternalLink } from "lucide-react"
+import type { Variable } from "../../schemas/maquinaSchema"
 import { DialGauge } from "./DialGauge"
-import type { Valores } from "../../types"
+import { getUnidad } from "./getUnidad"
 
 interface DialCardProps {
   variableKey: string
-  variable: Valores
+  variable: Variable
   estado: string
 }
 
-const GRAFANA_BASE = "http://monitormx.rymco.io:9030/public-dashboards"
+const NOM_PARAM_KEY = "paramNominal"
+
+function findNomVal(variable: Variable, parentKey: string): number | undefined {
+  if (variable.nom) return variable.nom
+  return undefined
+}
 
 export function DialCard({ variableKey, variable, estado }: DialCardProps) {
-  const { nombre, actual, maxMinNom } = variable
-  const { dbp_valmin, dbp_valnom, dbp_valmax } = maxMinNom
+  const valor = variable.valor
+  const min = variable.min ?? 0
+  const max = variable.max ?? 100
+  const nom = findNomVal(variable, variableKey) ?? max
+  const unidad = getUnidad(variable.nombre)
 
-  const grafanaUrl = `${GRAFANA_BASE}/${variableKey}`
+  const displayVal = isNaN(valor) ? "---" : valor.toFixed(1)
 
   return (
-    <div className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] flex flex-col items-center overflow-hidden">
-      <div className="w-full px-2.5 py-1.5 border-b border-[var(--border-color)]">
-        <h3 className="text-[9px] font-mono uppercase tracking-[0.15em] text-[var(--text-muted)] text-center truncate font-medium">
-          {nombre || variableKey}
-        </h3>
+    <div className="card card-glow radius-panel p-4 flex flex-col items-center gap-3">
+      <span className="text-[9px] font-mono uppercase tracking-[0.12em] text-[var(--text-muted)] text-center leading-tight font-medium">
+        {variable.nombre}
+      </span>
+      <DialGauge
+        valor={valor}
+        min={min}
+        max={max}
+        nom={nom}
+        estado={estado}
+        size={90}
+      />
+      <div className="flex items-baseline gap-1">
+        <span className="data-value text-base">{displayVal}</span>
+        {unidad && (
+          <span className="text-[9px] font-mono text-[var(--text-muted)] font-medium">{unidad}</span>
+        )}
       </div>
-
-      <div className="p-2.5">
-        <DialGauge
-          valor={actual}
-          min={dbp_valmin}
-          max={dbp_valmax}
-          nom={dbp_valnom}
-          estado={estado}
-          size={90}
-        />
-      </div>
-
-      <div className="w-full px-2.5 pb-2 flex justify-between text-[7px] font-mono text-[var(--text-muted)]">
-        <span>{dbp_valmin}</span>
-        <span className="text-[var(--text-color)] font-semibold">{dbp_valnom}</span>
-        <span>{dbp_valmax}</span>
-      </div>
-
-      <a
-        href={grafanaUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-full text-center py-1 border-t border-[var(--border-color)] text-[8px] font-mono text-[var(--accent)] hover:bg-[var(--accent-dim)] transition-colors"
-      >
-        <ExternalLink size={7} className="inline mr-0.5 -mt-0.5" />
-        Grafana
-      </a>
     </div>
   )
 }

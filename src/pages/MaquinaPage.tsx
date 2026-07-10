@@ -9,18 +9,18 @@ import { ChartPanel } from "../components/graficas/ChartPanel"
 import { AlarmList } from "../components/alarmas/AlarmList"
 import { Skeleton, CardSkeleton, DialSkeleton, ChartSkeleton } from "../components/ui/Skeleton"
 
+const STATUS_CONFIG: Record<string, { dot: string; label: string }> = {
+  Produciendo: { dot: "status-dot--running", label: "Running" },
+  Detenido: { dot: "status-dot--warn", label: "Stopped" },
+}
+
 function StatusBadge({ estado }: { estado: string }) {
-  const config =
-    estado === "Produciendo"
-      ? { dot: "bg-[var(--color-running)] shadow-[0_0_6px_rgba(34,197,94,0.5)]", text: "text-[var(--color-running)]", label: "Running" }
-      : estado === "Detenido"
-        ? { dot: "bg-[var(--text-muted)]", text: "text-[var(--text-muted)]", label: "Stopped" }
-        : { dot: "bg-[var(--color-fault)] shadow-[0_0_6px_rgba(239,68,68,0.5)]", text: "text-[var(--color-fault)]", label: "Fault" }
+  const config = STATUS_CONFIG[estado] || { dot: "status-dot--fault", label: "Fault" }
 
   return (
-    <div className={`flex items-center gap-1.5 shrink-0 ${config.text}`}>
-      <span className={`inline-block w-2.5 h-2.5 rounded-full shrink-0 ${config.dot}`} />
-      <span className="text-xs font-semibold">{config.label}</span>
+    <div className="flex items-center gap-1.5">
+      <span className={`status-dot ${config.dot}`} />
+      <span className="text-xs font-semibold text-[var(--text-color)]">{config.label}</span>
     </div>
   )
 }
@@ -35,9 +35,9 @@ export function MaquinaPage() {
 
   if (!maquina && !isConnected) {
     return (
-      <div className="p-4 space-y-4 h-full overflow-y-auto">
-        <Skeleton className="h-8 w-48" />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="p-6 space-y-6 h-full overflow-y-auto">
+        <Skeleton className="h-7 w-48" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <CardSkeleton />
           <CardSkeleton />
           <CardSkeleton />
@@ -54,12 +54,12 @@ export function MaquinaPage() {
 
   if (!maquina) {
     return (
-      <div className="p-4 space-y-4 h-full overflow-y-auto">
+      <div className="p-6 space-y-6 h-full overflow-y-auto">
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold">{id}</h2>
+          <h1 className="text-xl font-bold tracking-tight">{id}</h1>
           <span className="text-[10px] font-mono text-[var(--text-muted)]">Offline</span>
         </div>
-        <div className="p-4 bg-[var(--surface-color)] radius-panel border border-[var(--border-color)]">
+        <div className="panel p-6">
           <p className="text-sm text-[var(--text-muted)]">Esperando datos de esta maquina...</p>
         </div>
       </div>
@@ -76,7 +76,7 @@ export function MaquinaPage() {
   }))
 
   return (
-    <div className="p-5 space-y-5 h-full overflow-y-auto">
+    <div className="p-6 space-y-7 h-full overflow-y-auto">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <h1 className="text-xl font-bold tracking-tight truncate">{maquina.nombre}</h1>
@@ -90,9 +90,9 @@ export function MaquinaPage() {
         <TonejaleCard tonelaje={maquina.informativo.tonelaje} />
       </div>
 
-      <section>
-        <h2 className="text-xs font-semibold tracking-wide text-[var(--text-muted)] uppercase mb-3">Metricas En Vivo</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+      <section className="space-y-3">
+        <h2 className="section-label">Metricas En Vivo</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {variableEntries.map(([key, variable]) => (
             <DialCard
               key={key}
@@ -107,8 +107,8 @@ export function MaquinaPage() {
       {variablesList.length > 0 && <ChartPanel variables={variablesList} />}
 
       {alarmasMaquina.length > 0 && (
-        <section className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-4">
-          <h2 className="text-xs font-semibold tracking-wide text-[var(--text-muted)] uppercase mb-3">Alarmas Activas</h2>
+        <section className="panel p-5">
+          <h2 className="section-label mb-4">Alarmas Activas</h2>
           <AlarmList alarmas={alarmasMaquina} onDismiss={limpiarAlarma} />
         </section>
       )}

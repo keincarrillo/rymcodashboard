@@ -7,13 +7,15 @@ interface PiezasTurnoProps {
 
 export function PiezasTurno({ turno, piezas }: PiezasTurnoProps) {
   return (
-    <div className="flex items-center gap-3 text-[10px] font-mono">
-      <div className="flex items-center gap-1.5 text-[var(--text-muted)]">
-        <Users size={12} />
-        <span>Turno {turno}</span>
+    <div className="flex items-center gap-3">
+      <div className="flex items-center gap-1.5">
+        <Users size={11} className="text-[var(--text-muted)]" />
+        <span className="text-[10px] font-mono text-[var(--text-muted)] font-medium uppercase tracking-[0.08em]">Turno {turno}</span>
       </div>
-      <div className="text-[var(--text-color)]">
-        <span className="font-bold">{piezas.toLocaleString()}</span> <span className="text-[var(--text-muted)]">pcs</span>
+      <span className="w-px h-3 bg-[var(--border-color)]" />
+      <div className="text-[10px] font-mono">
+        <span className="data-value text-sm">{piezas.toLocaleString()}</span>
+        <span className="text-[var(--text-muted)] ml-1 font-medium">pcs</span>
       </div>
     </div>
   )

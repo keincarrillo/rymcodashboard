@@ -11,61 +11,40 @@ interface DialGaugeProps {
   size?: number
 }
 
+const START_ANGLE = -225
+const END_ANGLE = 45
+const ARC_SWEEP = END_ANGLE - START_ANGLE // 270
+
 export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps) {
   const colorKey = getColor(valor, min, max, estado)
   const color = COLORS[colorKey]
-
-  const { arcPath, needleAngle, displayValue } = useMemo(() => {
-    const startAngle = -225
-    const endAngle = 45
-    const totalAngle = endAngle - startAngle
-
-    const r = size / 2 - 6
-    const cx = size / 2
-    const cy = size / 2
-
-    const valorClamped = Math.max(min, Math.min(max, valor))
-    const ratio = max > min ? (valorClamped - min) / (max - min) : 0
-    const currentAngle = startAngle + ratio * totalAngle
-
-    const toRad = (deg: number) => (deg * Math.PI) / 180
-
-    const arcStart = toRad(startAngle)
-    const arcEnd = toRad(currentAngle)
-
-    const x1 = cx + r * Math.cos(arcStart)
-    const y1 = cy + r * Math.sin(arcStart)
-    const x2 = cx + r * Math.cos(arcEnd)
-    const y2 = cy + r * Math.sin(arcEnd)
-
-    const largeArc = currentAngle - startAngle > 180 ? 1 : 0
-
-    const arcPath = `M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`
-
-    const needleAngle = currentAngle
-
-    const displayValue = isNaN(valor) ? "---" : valor.toFixed(1)
-
-    return { arcPath, needleAngle, displayValue }
-  }, [valor, min, max, size])
 
   const cx = size / 2
   const cy = size / 2
   const r = size / 2 - 6
 
+  const arcCircumference = useMemo(() => {
+    const sweepRad = (ARC_SWEEP * Math.PI) / 180
+    return r * sweepRad
+  }, [r])
+
+  const ratio = useMemo(() => {
+    if (max <= min) return 0
+    return Math.max(0, Math.min(1, (valor - min) / (max - min)))
+  }, [valor, min, max])
+
+  const dashOffset = arcCircumference * (1 - ratio)
+
+  const needleAngle = START_ANGLE + ratio * ARC_SWEEP
+
   const tickMarks = useMemo(() => {
     const ticks = []
-    const startAngle = -225
-    const endAngle = 45
-    const totalAngle = endAngle - startAngle
     const numTicks = 10
-
     for (let i = 0; i <= numTicks; i++) {
-      const angle = startAngle + (i / numTicks) * totalAngle
+      const angle = START_ANGLE + (i / numTicks) * ARC_SWEEP
       const rad = (angle * Math.PI) / 180
       const innerR = r - 3
       const outerR = r + 1
-
       ticks.push({
         x1: cx + innerR * Math.cos(rad),
         y1: cy + innerR * Math.sin(rad),
@@ -74,21 +53,43 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
       })
     }
     return ticks
-  }, [r, cx, cy])
+  }, [cx, cy, r])
+
+  const displayValue = isNaN(valor) ? "---" : valor.toFixed(1)
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <circle
-        cx={cx}
-        cy={cy}
-        r={r}
-        className="dial-track"
+      <defs>
+        <linearGradient id="track-bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="var(--border-color)" />
+          <stop offset="100%" stopColor="var(--border-color)" stopOpacity="0.5" />
+        </linearGradient>
+      </defs>
+
+      {/* Track arc — dashed approach with one full arc path */}
+      <path
+        d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
+          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
+        fill="none"
+        stroke="url(#track-bg)"
+        strokeWidth="2.5"
+        strokeLinecap="round"
       />
 
+      {/* Active arc — uses stroke-dasharray for smooth animation */}
       <path
-        d={arcPath}
-        className="dial-arc"
+        d={`M ${cx + r * Math.cos((START_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((START_ANGLE * Math.PI) / 180)}
+          A ${r} ${r} 0 1 1 ${cx + r * Math.cos((END_ANGLE * Math.PI) / 180)} ${cy + r * Math.sin((END_ANGLE * Math.PI) / 180)}`}
+        fill="none"
         stroke={color}
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeDasharray={arcCircumference}
+        strokeDashoffset={dashOffset}
+        style={{
+          transition: "stroke-dashoffset 600ms cubic-bezier(0.16, 1, 0.3, 1), stroke 300ms ease",
+          filter: "drop-shadow(0 0 4px currentColor)",
+        }}
       />
 
       {tickMarks.map((tick, i) => (
@@ -98,35 +99,51 @@ export function DialGauge({ valor, min, max, estado, size = 90 }: DialGaugeProps
           y1={tick.y1}
           x2={tick.x2}
           y2={tick.y2}
-          className="dial-tick"
+          stroke="var(--border-color)"
           strokeWidth="1"
-          opacity={0.3}
+          opacity={0.35}
         />
       ))}
 
-      <line
-        x1={cx}
-        y1={cy}
-        x2={cx + (r - 10) * Math.cos((needleAngle * Math.PI) / 180)}
-        y2={cy + (r - 10) * Math.sin((needleAngle * Math.PI) / 180)}
-        className="dial-needle"
-        stroke={color}
-      />
+      {/* Needle group — rotated for smooth CSS transition */}
+      <g
+        style={{
+          transformOrigin: `${cx}px ${cy}px`,
+          transform: `rotate(${needleAngle}deg)`,
+          transition: "transform 600ms cubic-bezier(0.16, 1, 0.3, 1)",
+        }}
+      >
+        <line
+          x1={cx}
+          y1={cy}
+          x2={cx}
+          y2={cy - (r - 10)}
+          stroke={color}
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+      </g>
 
       <circle
         cx={cx}
         cy={cy}
-        r={2.5}
-        className="dial-needle-pivot"
+        r={2.8}
         fill={color}
+        style={{
+          transition: "fill 300ms ease",
+          filter: "drop-shadow(0 0 3px currentColor)",
+        }}
       />
 
       <text
         x={cx}
         y={cy + 18}
         textAnchor="middle"
-        className="dial-value"
+        fill="var(--text-color)"
         fontSize="11"
+        fontFamily="'JetBrains Mono', ui-monospace, monospace"
+        fontWeight="700"
+        fontFeatureSettings="'tnum'"
       >
         {displayValue}
       </text>
