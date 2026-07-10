@@ -6,7 +6,7 @@ import { EstadoCard } from "../components/informativo/estado/EstadoCard"
 import { OdtDesArtCard } from "../components/informativo/odtDesArt/OdtDesArtCard"
 import { TonejaleCard } from "../components/informativo/produccion/TonejaleCard"
 import { ChartPanel } from "../components/graficas/ChartPanel"
-import { AlarmList } from "../components/alarmas/AlarmList"
+import { AlarmPanel } from "../components/alarmas/AlarmPanel"
 import { Skeleton, CardSkeleton, DialSkeleton, ChartSkeleton } from "../components/ui/Skeleton"
 
 const STATUS_LABEL: Record<string, string> = {
@@ -37,7 +37,7 @@ export function MaquinaPage() {
 
   if (!maquina && !isConnected) {
     return (
-      <div className="p-6 space-y-6 h-full overflow-y-auto">
+      <div className="space-y-6 h-full overflow-y-auto">
         <Skeleton className="h-7 w-48" />
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
           <CardSkeleton />
@@ -56,7 +56,7 @@ export function MaquinaPage() {
 
   if (!maquina) {
     return (
-      <div className="p-6 space-y-6 h-full overflow-y-auto">
+      <div className="space-y-6 h-full overflow-y-auto">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-extrabold tracking-tight">{id}</h1>
           <span className="text-[10px] font-mono text-[var(--muted)] font-bold uppercase">Offline</span>
@@ -78,41 +78,42 @@ export function MaquinaPage() {
   }))
 
   return (
-    <div className="p-6 space-y-8 h-full overflow-y-auto">
-      <div className="flex items-center justify-between gap-3">
-        <div className="flex items-center gap-4 min-w-0">
-          <h1 className="text-2xl font-extrabold tracking-tight text-[var(--text)]">{maquina.nombre}</h1>
-          <StatusBadge estado={maquina.informativo.estadoYRun.estado} />
+    <div className="flex gap-6 h-full overflow-y-auto">
+      <div className="flex-1 space-y-8 min-w-0 pb-6">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-4 min-w-0">
+            <h1 className="text-2xl font-extrabold tracking-tight text-[var(--text)]">{maquina.nombre}</h1>
+            <StatusBadge estado={maquina.informativo.estadoYRun.estado} />
+          </div>
         </div>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <EstadoCard estadoYRun={maquina.informativo.estadoYRun} />
-        <OdtDesArtCard odtArtDesc={maquina.informativo.odtArtDesc} />
-        <TonejaleCard tonelaje={maquina.informativo.tonelaje} />
-      </div>
-
-      <section className="space-y-4">
-        <h2 className="section-label px-1">Metricas en vivo</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {variableEntries.map(([key, variable]) => (
-            <DialCard
-              key={key}
-              variableKey={key}
-              variable={variable!}
-              estado={maquina.informativo.estadoYRun.estado}
-            />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <EstadoCard estadoYRun={maquina.informativo.estadoYRun} />
+          <OdtDesArtCard odtArtDesc={maquina.informativo.odtArtDesc} />
+          <TonejaleCard tonelaje={maquina.informativo.tonelaje} />
         </div>
-      </section>
 
-      {variablesList.length > 0 && <ChartPanel variables={variablesList} />}
+        <section className="space-y-4">
+          <h2 className="section-label px-1">Metricas en vivo</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {variableEntries.map(([key, variable]) => (
+              <DialCard
+                key={key}
+                variableKey={key}
+                variable={variable!}
+                estado={maquina.informativo.estadoYRun.estado}
+              />
+            ))}
+          </div>
+        </section>
+
+        {variablesList.length > 0 && <ChartPanel variables={variablesList} />}
+      </div>
 
       {alarmasMaquina.length > 0 && (
-        <section id="alarmas-section" className="panel p-5">
-          <h2 className="section-label mb-4 px-1">Alarmas activas</h2>
-          <AlarmList alarmas={alarmasMaquina} onDismiss={limpiarAlarma} />
-        </section>
+        <aside className="w-72 shrink-0 border-l-2 border-[var(--border)] pl-6 pb-6">
+          <AlarmPanel alarmas={alarmasMaquina} onDismiss={limpiarAlarma} />
+        </aside>
       )}
     </div>
   )

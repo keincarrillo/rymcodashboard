@@ -1,35 +1,56 @@
-import { useState } from "react"
-import { Bell, ChevronDown, ChevronUp } from "lucide-react"
-import { useAlarmas } from "../../hooks/useAlarmas"
-import { AlarmList } from "./AlarmList"
+import { X } from "lucide-react"
+import type { Alarma } from "../../types"
 
-export function AlarmPanel() {
-  const { alarmasActivas, limpiarAlarma } = useAlarmas()
-  const [isExpanded, setIsExpanded] = useState(true)
+interface AlarmPanelProps {
+  alarmas: Alarma[]
+  onDismiss: (id: string) => void
+}
 
+const SEVERITY_CLASS: Record<string, string> = {
+  baja: "status status--warn",
+  media: "status status--warn",
+  alta: "status status--fault",
+  crítica: "status status--fault",
+  critica: "status status--fault",
+  preventivo: "status status--warn",
+  sin_rango: "status status--fault",
+}
+
+export function AlarmPanel({ alarmas, onDismiss }: AlarmPanelProps) {
   return (
-    <div className="bg-[var(--surface-color)] radius-card border border-[var(--border-color)] overflow-hidden">
-      <button
-        onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full px-3 py-2 flex items-center justify-between hover:bg-[var(--hover-bg)] transition-colors"
-      >
-        <div className="flex items-center gap-2">
-          <Bell size={12} className={alarmasActivas.length > 0 ? "text-[var(--color-danger)]" : "text-[var(--text-muted)]"} />
-          <span className="text-[10px] font-mono font-medium">Alarmas</span>
-          {alarmasActivas.length > 0 && (
-            <span className="text-[8px] font-mono px-1.5 py-0.5 radius-badge bg-[var(--color-danger)]/15 text-[var(--color-danger)] font-bold">
-              {alarmasActivas.length}
-            </span>
-          )}
-        </div>
-        {isExpanded ? <ChevronUp size={10} className="text-[var(--text-muted)]" /> : <ChevronDown size={10} className="text-[var(--text-muted)]" />}
-      </button>
-
-      {isExpanded && (
-        <div className="border-t border-[var(--border-color)] max-h-48 overflow-y-auto">
-          <AlarmList alarmas={alarmasActivas} onDismiss={limpiarAlarma} />
-        </div>
-      )}
+    <div className="space-y-4">
+      <h2 className="section-label flex items-center gap-2">
+        <span className="w-2 h-2 bg-[var(--fault)]" />
+        Alarmas activas
+        <span className="text-[var(--fault)] font-extrabold">{alarmas.length}</span>
+      </h2>
+      <div className="space-y-2">
+        {alarmas.map((alarma) => (
+          <div
+            key={alarma.id}
+            className="card p-3 space-y-2"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <span className={SEVERITY_CLASS[alarma.severidad] || "status status--fault"} />
+              <span className="text-[10px] font-mono font-bold text-[var(--fault)] uppercase flex-1">
+                {alarma.severidad}
+              </span>
+              <button
+                onClick={() => onDismiss(alarma.id)}
+                className="text-[var(--muted)] hover:text-[var(--text)] transition-colors"
+              >
+                <X size={12} />
+              </button>
+            </div>
+            <p className="text-[11px] font-semibold text-[var(--text)] leading-snug">
+              {alarma.variableNombre}: {alarma.valor} (min: {alarma.min}, max: {alarma.max})
+            </p>
+            <p className="text-[9px] font-mono font-bold text-[var(--muted)]">
+              {new Date(alarma.timestamp).toLocaleString()}
+            </p>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
