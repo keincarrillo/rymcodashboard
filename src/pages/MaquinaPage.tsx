@@ -76,10 +76,10 @@ export function MaquinaPage() {
   }))
 
   return (
-    <div className="p-4 space-y-4 h-full overflow-y-auto">
+    <div className="p-5 space-y-5 h-full overflow-y-auto">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
-          <h2 className="text-xl font-bold truncate">{maquina.nombre}</h2>
+          <h1 className="text-xl font-bold tracking-tight truncate">{maquina.nombre}</h1>
           <StatusBadge estado={maquina.informativo.estadoYRun.estado} />
         </div>
       </div>
@@ -90,9 +90,9 @@ export function MaquinaPage() {
         <TonejaleCard tonelaje={maquina.informativo.tonelaje} />
       </div>
 
-      <div>
-        <h3 className="text-xs font-semibold mb-3">Metricas En Vivo</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <section>
+        <h2 className="text-xs font-semibold tracking-wide text-[var(--text-muted)] uppercase mb-3">Metricas En Vivo</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
           {variableEntries.map(([key, variable]) => (
             <DialCard
               key={key}
@@ -102,15 +102,15 @@ export function MaquinaPage() {
             />
           ))}
         </div>
-      </div>
+      </section>
 
       {variablesList.length > 0 && <ChartPanel variables={variablesList} />}
 
       {alarmasMaquina.length > 0 && (
-        <div className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-4">
-          <h3 className="text-xs font-semibold mb-3">Alarmas Activas</h3>
+        <section className="bg-[var(--surface-color)] radius-panel border border-[var(--border-color)] p-4">
+          <h2 className="text-xs font-semibold tracking-wide text-[var(--text-muted)] uppercase mb-3">Alarmas Activas</h2>
           <AlarmList alarmas={alarmasMaquina} onDismiss={limpiarAlarma} />
-        </div>
+        </section>
       )}
     </div>
   )
